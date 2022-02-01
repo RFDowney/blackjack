@@ -1,3 +1,4 @@
+
 #include <algorithm>
 #include <iostream>
 #include <vector> 
@@ -45,6 +46,30 @@ int value(std::vector <char> hand) {
     }
   }
   return value; 
+}
+bool play(std::vector <char> hand, char dealer, std::vector <char> cardsontable){
+   bool ace;
+  for(int i=0; i<hand.size();i++){
+    if(hand[i]=='A'){
+      ace=true;
+    }
+  }
+  if(value(hand)<13){
+    return true;
+  }
+/*else if(value(hand)>13 && value(hand)<16 && ace 
+&&hand.size()<4
+){
+return true;
+}*/
+std::vector <char> dealer_v{};
+dealer_v.push_back(dealer);
+if(value(dealer_v)>9){
+  if(value(hand)<16){
+    return true;
+  }
+}
+return false;
 }
 
 float play_blackjack(int number_of_decks) {
@@ -121,14 +146,19 @@ float play_blackjack(int number_of_decks) {
       dealer_hand.push_back( deck[0] );
       deck.erase(deck.begin()); 
     }
-    if ( value(player_hand) == value(dealer_hand) ) {
-      result = 0.0; 
-    }
-    if ( value(player_hand) > value(dealer_hand) ) {
+    if ( value(dealer_hand) > 21 ) {
       result = 1.0; 
     }
-    if ( value(player_hand) < value(dealer_hand) ) {
-      result = -1.0; 
+    else {
+      if ( value(player_hand) == value(dealer_hand) ) {
+        result = 0.0; 
+      }
+      if ( value(player_hand) > value(dealer_hand) ) {
+        result = 1.0; 
+      }
+      if ( value(player_hand) < value(dealer_hand) ) {
+        result = -1.0; 
+      }
     }
   }
   
@@ -143,11 +173,15 @@ float play_blackjack(int number_of_decks) {
 }
 
 int main() {
-  const int number_of_games = 1;   
+  const int number_of_games = 1000;   
   const int number_of_decks = 4;
+
+  float total = 0.0;
   
   for (int game=0; game<number_of_games; game++) {
-    std::cout << play_blackjack(number_of_decks) << '\n'; 
+    float result = play_blackjack(number_of_decks); 
+    total += result; 
+    std::cout << total << '\n'; 
   }
 
   return 0; 
